@@ -1,4 +1,5 @@
 import products from "./data/products.json";
+import ProductListItem from "./components/ProductListItem";
 
 function App() {
   return (
@@ -8,9 +9,10 @@ function App() {
 
       <ul>
         {products.map((product) => (
-          <li key={product.id}>
-            {product.name} – ₹{product.price}
-          </li>
+          <ProductListItem
+            key={product.id}
+            product={product}
+          />
         ))}
       </ul>
     </div>
