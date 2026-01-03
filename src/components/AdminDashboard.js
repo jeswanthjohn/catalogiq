@@ -7,7 +7,7 @@ import {
 } from "../utils/analytics";
 
 /**
- * Exports product data as a CSV file
+ * Utility: Export products as CSV
  */
 function exportProductsCSV(products) {
   const headers = ["id", "name", "price", "category"];
@@ -26,6 +26,10 @@ function exportProductsCSV(products) {
 }
 
 function AdminDashboard({ products }) {
+  /**
+   * Memoized analytics calculations
+   * (prevents recomputation on every render)
+   */
   const stats = useMemo(() => {
     return {
       total: getTotalProducts(products),
@@ -39,7 +43,7 @@ function AdminDashboard({ products }) {
     <div style={{ padding: "1rem" }}>
       <h2>Admin Dashboard</h2>
 
-      {/* CSV EXPORT BUTTON */}
+      {/* EXACT PLACE: CSV EXPORT BUTTON */}
       <button
         onClick={() => exportProductsCSV(products)}
         style={{ marginBottom: "1rem" }}
@@ -50,6 +54,7 @@ function AdminDashboard({ products }) {
       <p>
         <strong>Total Products:</strong> {stats.total}
       </p>
+
       <p>
         <strong>Average Price:</strong> ₹{stats.averagePrice}
       </p>
