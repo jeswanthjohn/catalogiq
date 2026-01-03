@@ -9,4 +9,17 @@ The project currently demonstrates:
 - Early-stage component refactoring
 - Clean Git commit practices
 
+## Admin Dashboard
+
+- Internal analytics for product data
+- Category distribution
+- Average pricing insights
+- CSV export for reporting
+
+## Engineering Focus
+
+- Separation of concerns
+- Derived state (no hardcoded analytics)
+- Performance-aware React patterns
+
 > This project is under active development.
