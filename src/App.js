@@ -1,20 +1,28 @@
-import products from "./data/products.json";
-import ProductListItem from "./components/ProductListItem";
+import { useState } from "react";
+import { fetchAllProducts } from "./services/productService";
+import ProductGrid from "./components/ProductGrid";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>CatalogIQ</h1>
-      <p>Initial product catalogue view</p>
+  const [isAdminView, setIsAdminView] = useState(false);
+  const products = fetchAllProducts();
 
-      <ul>
-        {products.map((product) => (
-          <ProductListItem
-            key={product.id}
-            product={product}
-          />
-        ))}
-      </ul>
+  return (
+    <div>
+      <header style={{ padding: "1rem", display: "flex", gap: "1rem" }}>
+        <button onClick={() => setIsAdminView(false)}>
+          Catalog View
+        </button>
+        <button onClick={() => setIsAdminView(true)}>
+          Admin View
+        </button>
+      </header>
+
+      {isAdminView ? (
+        <AdminDashboard products={products} />
+      ) : (
+        <ProductGrid products={products} />
+      )}
     </div>
   );
 }
