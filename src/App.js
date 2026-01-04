@@ -1,28 +1,22 @@
-import { useState } from "react";
-import { fetchAllProducts } from "./services/productService";
+import { useEffect, useState } from "react";
 import ProductGrid from "./components/ProductGrid";
 import AdminDashboard from "./components/AdminDashboard";
+import { getProducts } from "./services/productService";
 
 function App() {
-  const [isAdminView, setIsAdminView] = useState(false);
-  const products = fetchAllProducts();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts()
+      .then(setProducts)
+      .catch(console.error);
+  }, []);
 
   return (
     <div>
-      <header style={{ padding: "1rem", display: "flex", gap: "1rem" }}>
-        <button onClick={() => setIsAdminView(false)}>
-          Catalog View
-        </button>
-        <button onClick={() => setIsAdminView(true)}>
-          Admin View
-        </button>
-      </header>
-
-      {isAdminView ? (
-        <AdminDashboard products={products} />
-      ) : (
-        <ProductGrid products={products} />
-      )}
+      <h1>Product Catalog</h1>
+      <ProductGrid products={products} />
+      <AdminDashboard products={products} />
     </div>
   );
 }
