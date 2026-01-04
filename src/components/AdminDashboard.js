@@ -1,10 +1,5 @@
 import { useMemo } from "react";
-import {
-  getTotalProducts,
-  getAveragePrice,
-  getProductsByCategory,
-  getTopExpensiveProducts,
-} from "../utils/analytics";
+import { calculateAnalytics } from "../utils/analytics";
 
 /**
  * Utility: Export products as CSV
@@ -28,54 +23,35 @@ function exportProductsCSV(products) {
 function AdminDashboard({ products }) {
   /**
    * Memoized analytics calculations
-   * (prevents recomputation on every render)
+   * (single aggregation pass)
    */
   const stats = useMemo(() => {
-    return {
-      total: getTotalProducts(products),
-      averagePrice: getAveragePrice(products),
-      byCategory: getProductsByCategory(products),
-      topProducts: getTopExpensiveProducts(products),
-    };
+    return calculateAnalytics(products);
   }, [products]);
 
   return (
     <div style={{ padding: "1rem" }}>
       <h2>Admin Dashboard</h2>
 
-      {/* EXACT PLACE: CSV EXPORT BUTTON */}
       <button
         onClick={() => exportProductsCSV(products)}
         style={{ marginBottom: "1rem" }}
+        disabled={!products || products.length === 0}
       >
         Export Products CSV
       </button>
 
       <p>
-        <strong>Total Products:</strong> {stats.total}
+        <strong>Total Products:</strong> {stats.totalProducts}
       </p>
 
       <p>
-        <strong>Average Price:</strong> ₹{stats.averagePrice}
+        <strong>Total Revenue:</strong> ₹{stats.totalRevenue}
       </p>
 
-      <h3>Products by Category</h3>
-      <ul>
-        {Object.entries(stats.byCategory).map(([category, count]) => (
-          <li key={category}>
-            {category}: {count}
-          </li>
-        ))}
-      </ul>
-
-      <h3>Top Expensive Products</h3>
-      <ul>
-        {stats.topProducts.map((product) => (
-          <li key={product.id}>
-            {product.name} – ₹{product.price}
-          </li>
-        ))}
-      </ul>
+      <p>
+        <strong>Average Rating:</strong> {stats.averageRating}
+      </p>
     </div>
   );
 }
