@@ -22,4 +22,14 @@ The project currently demonstrates:
 - Derived state (no hardcoded analytics)
 - Performance-aware React patterns
 
+## Development & Running the App
+
+### Local Development
+
+```bash
+npm install
+npm start
+
+
 > This project is under active development.
+```
