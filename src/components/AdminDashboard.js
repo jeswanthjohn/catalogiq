@@ -33,7 +33,12 @@ function AdminDashboard({ products }) {
 
   return (
     <div className="dashboard">
-      <h2 style={{ marginBottom: "1.5rem" }}>Admin Dashboard</h2>
+      <h2 style={{ marginBottom: "0.5rem" }}>Admin Dashboard</h2>
+
+      {/* REAL-TIME INDICATOR */}
+      <p style={{ color: "#777", marginBottom: "1.5rem" }}>
+        Live analytics (simulated for demo purposes)
+      </p>
 
       {/* ACTIONS */}
       <div style={{ marginBottom: "2rem" }}>
