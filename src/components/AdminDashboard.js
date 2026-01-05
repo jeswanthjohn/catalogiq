@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { calculateAnalytics } from "../utils/analytics";
+import DashboardCard from "./DashboardCard";
 
 /**
  * Utility: Export products as CSV
+ * (kept exactly as before)
  */
 function exportProductsCSV(products) {
   const headers = ["id", "name", "price", "category"];
@@ -30,28 +32,33 @@ function AdminDashboard({ products }) {
   }, [products]);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Admin Dashboard</h2>
+    <div className="dashboard">
+      <h2 style={{ marginBottom: "1.5rem" }}>Admin Dashboard</h2>
 
-      <button
-        onClick={() => exportProductsCSV(products)}
-        style={{ marginBottom: "1rem" }}
-        disabled={!products || products.length === 0}
-      >
-        Export Products CSV
-      </button>
+      {/* ACTIONS */}
+      <div style={{ marginBottom: "2rem" }}>
+        <button
+          onClick={() => exportProductsCSV(products)}
+          disabled={!products || products.length === 0}
+        >
+          Export Products CSV
+        </button>
+      </div>
 
-      <p>
-        <strong>Total Products:</strong> {stats.totalProducts}
-      </p>
+      {/* KPI SECTION */}
+      <div className="kpi-grid">
+        <DashboardCard title="Total Products">
+          <h2>{stats.totalProducts}</h2>
+        </DashboardCard>
 
-      <p>
-        <strong>Total Revenue:</strong> ₹{stats.totalRevenue}
-      </p>
+        <DashboardCard title="Total Revenue">
+          <h2>₹{stats.totalRevenue}</h2>
+        </DashboardCard>
 
-      <p>
-        <strong>Average Rating:</strong> {stats.averageRating}
-      </p>
+        <DashboardCard title="Average Rating">
+          <h2>{stats.averageRating}</h2>
+        </DashboardCard>
+      </div>
     </div>
   );
 }

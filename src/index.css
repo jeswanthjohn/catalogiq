@@ -11,3 +11,42 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+/* ===============================
+   ADMIN DASHBOARD STYLES
+   =============================== */
+
+/* Dashboard canvas */
+.dashboard {
+  background: #f5f7fb;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* KPI grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.kpi-grid h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* Dashboard card */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.dashboard-card-title {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
