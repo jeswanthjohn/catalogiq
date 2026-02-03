@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "./components/ProductGrid";
-import FilterBar from "./components/FilterBar";
+import FilterBar from "./components/Filters";
 import Pagination from "./components/Pagination";
 import AdminDashboard from "./components/AdminDashboard";
 
