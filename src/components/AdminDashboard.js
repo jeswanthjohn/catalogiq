@@ -4,12 +4,18 @@ import DashboardCard from "./DashboardCard";
 
 /**
  * Utility: Export products as CSV
- * (kept exactly as before)
  */
 function exportProductsCSV(products) {
+  if (!Array.isArray(products) || products.length === 0) return;
+
   const headers = ["id", "name", "price", "category"];
   const rows = products.map((p) =>
-    [p.id, p.name, p.price, p.category].join(",")
+    [
+      p.id ?? "",
+      p.name ?? "",
+      p.price ?? "",
+      p.category ?? "",
+    ].join(",")
   );
 
   const csvContent = [headers.join(","), ...rows].join("\n");
@@ -22,20 +28,29 @@ function exportProductsCSV(products) {
   link.click();
 }
 
-function AdminDashboard({ products }) {
-  /**
-   * Memoized analytics calculations
-   * (single aggregation pass)
-   */
+function AdminDashboard({ products = [] }) {
+  const hasData = Array.isArray(products) && products.length > 0;
+
   const stats = useMemo(() => {
     return calculateAnalytics(products);
   }, [products]);
+
+  if (!hasData) {
+    return (
+      <div className="dashboard">
+        <h2>Admin Dashboard</h2>
+        <p style={{ color: "#666", marginTop: "1rem" }}>
+          No product data available. Analytics will appear once products
+          are added.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">
       <h2 style={{ marginBottom: "0.5rem" }}>Admin Dashboard</h2>
 
-      {/* REAL-TIME INDICATOR */}
       <p style={{ color: "#777", marginBottom: "1.5rem" }}>
         Live analytics (simulated for demo purposes)
       </p>
@@ -44,10 +59,15 @@ function AdminDashboard({ products }) {
       <div style={{ marginBottom: "2rem" }}>
         <button
           onClick={() => exportProductsCSV(products)}
-          disabled={!products || products.length === 0}
+          disabled={!hasData}
         >
           Export Products CSV
         </button>
+        {!hasData && (
+          <p style={{ fontSize: "0.85rem", color: "#999" }}>
+            No data available to export.
+          </p>
+        )}
       </div>
 
       {/* KPI SECTION */}
