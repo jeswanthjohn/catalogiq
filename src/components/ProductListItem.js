@@ -3,8 +3,17 @@ function ProductListItem({ product }) {
 
   return (
     <li>
-      <strong>{product.name || "Unnamed Product"}</strong> —{" "}
-      {product.price != null ? `₹${product.price}` : "Price N/A"}
+      <article aria-labelledby={`product-${product.id}`}>
+        <h3 id={`product-${product.id}`}>
+          {product.name || "Unnamed Product"}
+        </h3>
+
+        <p>
+          {product.price != null
+            ? `Price: ₹${product.price}`
+            : "Price not available"}
+        </p>
+      </article>
     </li>
   );
 }

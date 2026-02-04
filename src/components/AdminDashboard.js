@@ -10,12 +10,7 @@ function exportProductsCSV(products) {
 
   const headers = ["id", "name", "price", "category"];
   const rows = products.map((p) =>
-    [
-      p.id ?? "",
-      p.name ?? "",
-      p.price ?? "",
-      p.category ?? "",
-    ].join(",")
+    [p.id ?? "", p.name ?? "", p.price ?? "", p.category ?? ""].join(",")
   );
 
   const csvContent = [headers.join(","), ...rows].join("\n");
@@ -37,19 +32,18 @@ function AdminDashboard({ products = [] }) {
 
   if (!hasData) {
     return (
-      <div className="dashboard">
-        <h2>Admin Dashboard</h2>
+      <section>
         <p style={{ color: "#666", marginTop: "1rem" }}>
           No product data available. Analytics will appear once products
           are added.
         </p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="dashboard">
-      <h2 style={{ marginBottom: "0.5rem" }}>Admin Dashboard</h2>
+    <section aria-labelledby="dashboard-heading" className="dashboard">
+      <h3 id="dashboard-heading">Live Analytics</h3>
 
       <p style={{ color: "#777", marginBottom: "1.5rem" }}>
         Live analytics (simulated for demo purposes)
@@ -59,32 +53,27 @@ function AdminDashboard({ products = [] }) {
       <div style={{ marginBottom: "2rem" }}>
         <button
           onClick={() => exportProductsCSV(products)}
-          disabled={!hasData}
+          aria-label="Export products as CSV"
         >
           Export Products CSV
         </button>
-        {!hasData && (
-          <p style={{ fontSize: "0.85rem", color: "#999" }}>
-            No data available to export.
-          </p>
-        )}
       </div>
 
       {/* KPI SECTION */}
-      <div className="kpi-grid">
+      <section className="kpi-grid" aria-label="Key performance indicators">
         <DashboardCard title="Total Products">
-          <h2>{stats.totalProducts}</h2>
+          <p>{stats.totalProducts}</p>
         </DashboardCard>
 
         <DashboardCard title="Total Revenue">
-          <h2>₹{stats.totalRevenue}</h2>
+          <p>₹{stats.totalRevenue}</p>
         </DashboardCard>
 
         <DashboardCard title="Average Rating">
-          <h2>{stats.averageRating}</h2>
+          <p>{stats.averageRating}</p>
         </DashboardCard>
-      </div>
-    </div>
+      </section>
+    </section>
   );
 }
 

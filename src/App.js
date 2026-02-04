@@ -29,7 +29,6 @@ function App() {
     fetch("/products.json")
       .then((res) => res.json())
       .then((data) => {
-        // initialize sold count for analytics realism
         const enriched = data.map((p) => ({
           ...p,
           sold: p.sold || Math.floor(Math.random() * 10),
@@ -45,18 +44,11 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setProducts((prev) =>
-        prev.map((p) => {
-          // small chance a product "sells"
-          if (Math.random() > 0.9) {
-            return {
-              ...p,
-              sold: p.sold + 1,
-            };
-          }
-          return p;
-        })
+        prev.map((p) =>
+          Math.random() > 0.9 ? { ...p, sold: p.sold + 1 } : p
+        )
       );
-    }, 3000); // every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -113,29 +105,42 @@ function App() {
      ========================= */
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>Product Catalog</h1>
+    <>
+      <header>
+        <h1 style={{ textAlign: "center" }}>Product Catalog</h1>
+      </header>
 
-      <FilterBar
-        filters={filters}
-        setFilters={setFilters}
-        sort={sort}
-        setSort={setSort}
-      />
+      <main>
+        <section aria-labelledby="catalog-section">
+          <h2 id="catalog-section" className="sr-only">
+            Product listing
+          </h2>
 
-      <ProductGrid products={paginatedProducts} />
+          <FilterBar
+            filters={filters}
+            setFilters={setFilters}
+            sort={sort}
+            setSort={setSort}
+          />
 
-      <Pagination
-        currentPage={currentPage}
-        totalItems={sortedProducts.length}
-        itemsPerPage={itemsPerPage}
-        onPageChange={setCurrentPage}
-      />
+          <ProductGrid products={paginatedProducts} />
 
-      <hr style={{ margin: "3rem 0" }} />
+          <Pagination
+            currentPage={currentPage}
+            totalItems={sortedProducts.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+          />
+        </section>
 
-      <AdminDashboard products={products} />
-    </div>
+        <hr style={{ margin: "3rem 0" }} />
+
+        <section aria-labelledby="admin-section">
+          <h2 id="admin-section">Admin Dashboard</h2>
+          <AdminDashboard products={products} />
+        </section>
+      </main>
+    </>
   );
 }
 
