@@ -4,13 +4,20 @@ import DashboardCard from "./DashboardCard";
 
 /**
  * Utility: Export products as CSV
+ * Defensive against malformed product data.
  */
 function exportProductsCSV(products) {
   if (!Array.isArray(products) || products.length === 0) return;
 
   const headers = ["id", "name", "price", "category"];
+
   const rows = products.map((p) =>
-    [p.id ?? "", p.name ?? "", p.price ?? "", p.category ?? ""].join(",")
+    [
+      p?.id ?? "",
+      typeof p?.name === "string" ? p.name : "",
+      typeof p?.price === "number" ? p.price : "",
+      typeof p?.category === "string" ? p.category : "",
+    ].join(",")
   );
 
   const csvContent = [headers.join(","), ...rows].join("\n");
@@ -21,21 +28,44 @@ function exportProductsCSV(products) {
   link.href = url;
   link.download = "products-report.csv";
   link.click();
+
+  URL.revokeObjectURL(url);
 }
 
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
   const stats = useMemo(() => {
-    return calculateAnalytics(products);
-  }, [products]);
+    if (!hasData) {
+      return {
+        totalProducts: 0,
+        totalRevenue: 0,
+        averageRating: 0,
+      };
+    }
+
+    const result = calculateAnalytics(products);
+
+    return {
+      totalProducts:
+        typeof result?.totalProducts === "number"
+          ? result.totalProducts
+          : 0,
+      totalRevenue:
+        typeof result?.totalRevenue === "number" ? result.totalRevenue : 0,
+      averageRating:
+        typeof result?.averageRating === "number"
+          ? result.averageRating
+          : 0,
+    };
+  }, [products, hasData]);
 
   if (!hasData) {
     return (
       <section>
         <p style={{ color: "#666", marginTop: "1rem" }}>
-          No product data available. Analytics will appear once products
-          are added.
+          No product data available. Analytics will appear once products are
+          added.
         </p>
       </section>
     );

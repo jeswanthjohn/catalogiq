@@ -1,7 +1,7 @@
 import ProductListItem from "./ProductListItem";
 
 export default function ProductGrid({ products }) {
-  if (!products || products.length === 0) {
+  if (!Array.isArray(products) || products.length === 0) {
     return (
       <section aria-live="polite">
         <p style={{ padding: "1rem", color: "#555" }}>
