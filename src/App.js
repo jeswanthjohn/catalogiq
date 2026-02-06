@@ -8,14 +8,6 @@ function App() {
      ========================= */
 
   const [products, setProducts] = useState([]);
-  const [filters] = useState({
-    category: "",
-    priceMin: 0,
-    priceMax: 100000,
-    rating: 0,
-    search: "",
-  });
-  const [sort] = useState("");
   const [currentPage] = useState(1);
   const [itemsPerPage] = useState(6);
 
@@ -55,14 +47,10 @@ function App() {
      DERIVED STATE
      ========================= */
 
-  const filteredProducts = useMemo(() => {
-    return products;
-  }, [products]);
-
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return filteredProducts.slice(start, start + itemsPerPage);
-  }, [filteredProducts, currentPage, itemsPerPage]);
+    return products.slice(start, start + itemsPerPage);
+  }, [products, currentPage, itemsPerPage]);
 
   /* =========================
      RENDER
