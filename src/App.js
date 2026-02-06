@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductGrid from "./components/ProductGrid";
-import FilterBar from "./components/Filters";
-import Pagination from "./components/Pagination";
 import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
@@ -10,15 +8,15 @@ function App() {
      ========================= */
 
   const [products, setProducts] = useState([]);
-  const [filters, setFilters] = useState({
+  const [filters] = useState({
     category: "",
     priceMin: 0,
     priceMax: 100000,
     rating: 0,
     search: "",
   });
-  const [sort, setSort] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [sort] = useState("");
+  const [currentPage] = useState(1);
   const [itemsPerPage] = useState(6);
 
   /* =========================
@@ -54,51 +52,17 @@ function App() {
   }, []);
 
   /* =========================
-     RESET PAGE ON FILTER/SORT
-     ========================= */
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filters, sort]);
-
-  /* =========================
      DERIVED STATE
      ========================= */
 
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      const matchCategory =
-        !filters.category || p.category === filters.category;
-      const matchPrice =
-        p.price >= filters.priceMin && p.price <= filters.priceMax;
-      const matchRating = p.rating >= filters.rating;
-      const matchSearch = p.name
-        .toLowerCase()
-        .includes(filters.search.toLowerCase());
-
-      return (
-        matchCategory &&
-        matchPrice &&
-        matchRating &&
-        matchSearch
-      );
-    });
-  }, [products, filters]);
-
-  const sortedProducts = useMemo(() => {
-    const list = [...filteredProducts];
-
-    if (sort === "price-low") list.sort((a, b) => a.price - b.price);
-    if (sort === "price-high") list.sort((a, b) => b.price - a.price);
-    if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
-
-    return list;
-  }, [filteredProducts, sort]);
+    return products;
+  }, [products]);
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return sortedProducts.slice(start, start + itemsPerPage);
-  }, [sortedProducts, currentPage, itemsPerPage]);
+    return filteredProducts.slice(start, start + itemsPerPage);
+  }, [filteredProducts, currentPage, itemsPerPage]);
 
   /* =========================
      RENDER
@@ -116,21 +80,7 @@ function App() {
             Product listing
           </h2>
 
-          <FilterBar
-            filters={filters}
-            setFilters={setFilters}
-            sort={sort}
-            setSort={setSort}
-          />
-
           <ProductGrid products={paginatedProducts} />
-
-          <Pagination
-            currentPage={currentPage}
-            totalItems={sortedProducts.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={setCurrentPage}
-          />
         </section>
 
         <hr style={{ margin: "3rem 0" }} />
