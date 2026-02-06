@@ -3,20 +3,15 @@ import ProductListItem from "./ProductListItem";
 export default function ProductGrid({ products }) {
   if (!Array.isArray(products) || products.length === 0) {
     return (
-      <section aria-live="polite" style={{ marginTop: "1rem" }}>
-        <p style={{ padding: "1rem", color: "#555", textAlign: "center" }}>
-          No products found. Try adjusting your filters.
-        </p>
+      <section aria-live="polite" className="empty-state">
+        <p>No products found. Try adjusting your filters.</p>
       </section>
     );
   }
 
   return (
-    <section aria-labelledby="products-heading" style={{ marginTop: "1.5rem" }}>
-      <h2
-        id="products-heading"
-        style={{ marginBottom: "1rem", fontSize: "1.25rem" }}
-      >
+    <section aria-labelledby="products-heading" className="catalog-section">
+      <h2 id="products-heading" className="section-title">
         Product Listing
       </h2>
 

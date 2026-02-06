@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "./App.css"; 
 import ProductGrid from "./components/ProductGrid";
 import AdminDashboard from "./components/AdminDashboard";
 
@@ -59,7 +60,7 @@ function App() {
   return (
     <>
       <header>
-        <h1 style={{ textAlign: "center" }}>Product Catalog</h1>
+        <h1>Product Catalog</h1>
       </header>
 
       <main>
@@ -71,10 +72,10 @@ function App() {
           <ProductGrid products={paginatedProducts} />
         </section>
 
-        <hr style={{ margin: "3rem 0" }} />
+        <hr />
 
-        <section aria-labelledby="admin-section">
-          <h2 id="admin-section">Admin Dashboard</h2>
+        <section aria-labelledby="admin-section" id="admin-section">
+          <h2 id="admin-section-title">Admin Dashboard</h2>
           <AdminDashboard products={products} />
         </section>
       </main>
