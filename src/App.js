@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ProductGrid from "./components/ProductGrid";
 import AdminDashboard from "./components/AdminDashboard";
+import useProducts from "./hooks/useProducts";
 
 function App() {
   /* =========================
@@ -9,10 +10,10 @@ function App() {
      ========================= */
 
   const [products, setProducts] = useState([]);
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
 
-  // NEW: filter & sort state
+  // Filter & sort state
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("");
 
@@ -49,30 +50,21 @@ function App() {
   }, []);
 
   /* =========================
-     DERIVED STATE (FILTER + SORT)
+     DERIVED PRODUCTS (HOOK)
      ========================= */
 
-  const filteredAndSortedProducts = useMemo(() => {
-    let result = [...products];
+  const derivedProducts = useProducts(products, {
+    category: selectedCategory,
+    sortOrder,
+  });
 
-    // Filter by category
-    if (selectedCategory !== "all") {
-      result = result.filter(
-        (product) => product.category === selectedCategory
-      );
-    }
+  /* =========================
+     RESET PAGINATION ON FILTER CHANGE
+     ========================= */
 
-    // Sort by price
-    if (sortOrder === "price-asc") {
-      result.sort((a, b) => a.price - b.price);
-    }
-
-    if (sortOrder === "price-desc") {
-      result.sort((a, b) => b.price - a.price);
-    }
-
-    return result;
-  }, [products, selectedCategory, sortOrder]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, sortOrder]);
 
   /* =========================
      PAGINATION
@@ -80,8 +72,8 @@ function App() {
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return filteredAndSortedProducts.slice(start, start + itemsPerPage);
-  }, [filteredAndSortedProducts, currentPage, itemsPerPage]);
+    return derivedProducts.slice(start, start + itemsPerPage);
+  }, [derivedProducts, currentPage, itemsPerPage]);
 
   /* =========================
      RENDER

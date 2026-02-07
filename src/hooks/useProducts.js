@@ -2,11 +2,14 @@ import { useMemo } from "react";
 import sanitizeProduct from "../utils/sanitizeProduct";
 
 /**
- * Reusable hook to derive filtered product data.
- * Sanitizes incoming products and defends against malformed input.
+ * Reusable hook to derive filtered & sorted product data.
+ * - Sanitizes incoming products
+ * - Applies category filtering
+ * - Applies price sorting
+ * - Defends against malformed input
  */
 export default function useProducts(products = [], filters = {}) {
-  const { category, minPrice, maxPrice } = filters;
+  const { category = "all", sortOrder = "" } = filters;
 
   return useMemo(() => {
     if (!Array.isArray(products)) return [];
@@ -14,18 +17,20 @@ export default function useProducts(products = [], filters = {}) {
     // Sanitize once at the data boundary
     let result = products.map(sanitizeProduct);
 
-    if (category) {
+    // Filter by category
+    if (category !== "all") {
       result = result.filter((p) => p.category === category);
     }
 
-    if (typeof minPrice === "number") {
-      result = result.filter((p) => p.price >= minPrice);
+    // Sort by price
+    if (sortOrder === "price-asc") {
+      result = [...result].sort((a, b) => a.price - b.price);
     }
 
-    if (typeof maxPrice === "number") {
-      result = result.filter((p) => p.price <= maxPrice);
+    if (sortOrder === "price-desc") {
+      result = [...result].sort((a, b) => b.price - a.price);
     }
 
     return result;
-  }, [products, category, minPrice, maxPrice]);
+  }, [products, category, sortOrder]);
 }
