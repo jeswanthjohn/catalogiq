@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import "./App.css"; 
+import "./App.css";
 import ProductGrid from "./components/ProductGrid";
 import AdminDashboard from "./components/AdminDashboard";
 
@@ -11,6 +11,10 @@ function App() {
   const [products, setProducts] = useState([]);
   const [currentPage] = useState(1);
   const [itemsPerPage] = useState(6);
+
+  // NEW: filter & sort state
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortOrder, setSortOrder] = useState("");
 
   /* =========================
      LOAD PRODUCTS (ONCE)
@@ -45,13 +49,39 @@ function App() {
   }, []);
 
   /* =========================
-     DERIVED STATE
+     DERIVED STATE (FILTER + SORT)
+     ========================= */
+
+  const filteredAndSortedProducts = useMemo(() => {
+    let result = [...products];
+
+    // Filter by category
+    if (selectedCategory !== "all") {
+      result = result.filter(
+        (product) => product.category === selectedCategory
+      );
+    }
+
+    // Sort by price
+    if (sortOrder === "price-asc") {
+      result.sort((a, b) => a.price - b.price);
+    }
+
+    if (sortOrder === "price-desc") {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    return result;
+  }, [products, selectedCategory, sortOrder]);
+
+  /* =========================
+     PAGINATION
      ========================= */
 
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return products.slice(start, start + itemsPerPage);
-  }, [products, currentPage, itemsPerPage]);
+    return filteredAndSortedProducts.slice(start, start + itemsPerPage);
+  }, [filteredAndSortedProducts, currentPage, itemsPerPage]);
 
   /* =========================
      RENDER
@@ -69,7 +99,14 @@ function App() {
             Product listing
           </h2>
 
-          <ProductGrid products={paginatedProducts} />
+          <ProductGrid
+            products={paginatedProducts}
+            allProducts={products}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            sortOrder={sortOrder}
+            onSortChange={setSortOrder}
+          />
         </section>
 
         <hr />
