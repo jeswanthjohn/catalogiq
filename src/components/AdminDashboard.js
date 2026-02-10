@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { calculateAnalytics } from "../utils/analytics";
 import DashboardCard from "./DashboardCard";
 
 /**
@@ -9,7 +8,7 @@ import DashboardCard from "./DashboardCard";
 function exportProductsCSV(products) {
   if (!Array.isArray(products) || products.length === 0) return;
 
-  const headers = ["id", "name", "price", "category"];
+  const headers = ["id", "name", "price", "category", "unitsSold"];
 
   const rows = products.map((p) =>
     [
@@ -17,6 +16,7 @@ function exportProductsCSV(products) {
       typeof p?.name === "string" ? p.name : "",
       typeof p?.price === "number" ? p.price : "",
       typeof p?.category === "string" ? p.category : "",
+      typeof p?.unitsSold === "number" ? p.unitsSold : 0,
     ].join(",")
   );
 
@@ -35,6 +35,11 @@ function exportProductsCSV(products) {
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
+  /**
+   * IMPORTANT:
+   * - Revenue is calculated ONLY from stable business data (price × unitsSold)
+   * - It must NOT depend on filters, sorting, or pagination
+   */
   const stats = useMemo(() => {
     if (!hasData) {
       return {
@@ -44,19 +49,25 @@ function AdminDashboard({ products = [] }) {
       };
     }
 
-    const result = calculateAnalytics(products);
+    const totalProducts = products.length;
+
+    const totalRevenue = products.reduce((sum, p) => {
+      const price = typeof p?.price === "number" ? p.price : 0;
+      const unitsSold =
+        typeof p?.unitsSold === "number" ? p.unitsSold : 0;
+
+      return sum + price * unitsSold;
+    }, 0);
+
+    const averageRating =
+      products.reduce((sum, p) => {
+        return sum + (typeof p?.rating === "number" ? p.rating : 0);
+      }, 0) / totalProducts;
 
     return {
-      totalProducts:
-        typeof result?.totalProducts === "number"
-          ? result.totalProducts
-          : 0,
-      totalRevenue:
-        typeof result?.totalRevenue === "number" ? result.totalRevenue : 0,
-      averageRating:
-        typeof result?.averageRating === "number"
-          ? result.averageRating
-          : 0,
+      totalProducts,
+      totalRevenue,
+      averageRating: Number(averageRating.toFixed(2)),
     };
   }, [products, hasData]);
 
