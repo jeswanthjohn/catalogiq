@@ -1,23 +1,83 @@
 [
   {
-    "id": 1,
-    "name": "Wireless Headphones",
-    "category": "Electronics",
-    "price": 2999,
-    "rating": 4.5
-  },
-  {
-    "id": 2,
-    "name": "Smart Watch",
-    "category": "Electronics",
-    "price": 4999,
-    "rating": 4.3
-  },
-  {
-    "id": 3,
-    "name": "Cotton T-Shirt",
-    "category": "Clothing",
-    "price": 999,
-    "rating": 4.0
-  }
+  "id": 101,
+  "name": "ErgoFlex Office Chair",
+  "category": "Furniture",
+  "price": 12999,
+  "rating": 4.6,
+  "stock": 18
+},
+{
+  "id": 102,
+  "name": "Wooden Study Desk",
+  "category": "Furniture",
+  "price": 12999,
+  "rating": 4.1,
+  "stock": 10
+},
+{
+  "id": 103,
+  "name": "Ayurvedic Immunity Booster",
+  "category": "Health",
+  "price": 799,
+  "rating": 4.9,
+  "stock": 40
+},
+{
+  "id": 104,
+  "name": "Digital Blood Pressure Monitor",
+  "category": "Health",
+  "price": 2499,
+  "rating": 4.3,
+  "stock": 25
+},
+{
+  "id": 105,
+  "name": "Noise-Canceling Headphones Lite",
+  "category": "Electronics",
+  "price": 3999,
+  "rating": 4.0,
+  "stock": 0
+},
+{
+  "id": 106,
+  "name": "Budget Smartphone X1",
+  "category": "Electronics",
+  "price": 12999,
+  "rating": 3.8,
+  "stock": 12
+},
+{
+  "id": 107,
+  "name": "Premium Cotton Bedsheet",
+  "category": "Home",
+  "price": 2499,
+  "rating": 4.7,
+  "stock": 30
+},
+{
+  "id": 108,
+  "name": "Stainless Steel Cookware Set",
+  "category": "Home",
+  "price": 5999,
+  "rating": 4.4,
+  "stock": 15
+},
+{
+  "id": 109,
+  "name": "Beginner Yoga Mat",
+  "category": "Sports",
+  "price": 999,
+  "rating": 4.2,
+  "stock": 50
+},
+{
+  "id": 110,
+  "name": "Advanced Resistance Bands Kit",
+  "category": "Sports",
+  "price": 999,
+  "rating": 4.8,
+  "stock": 22
+}
+
 ]
