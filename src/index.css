@@ -1,18 +1,3 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-
 /* ===============================
    ADMIN DASHBOARD STYLES
    =============================== */
@@ -31,22 +16,42 @@ code {
   gap: 1.5rem;
 }
 
-.kpi-grid h2 {
-  font-size: 2rem;
-  margin: 0;
-}
-
 /* Dashboard card */
 .dashboard-card {
   background: #ffffff;
   border-radius: 14px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard-card-title {
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* KPI VALUE */
+.dashboard-card-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Highlight revenue card */
+.dashboard-card--highlight {
+  border: 2px solid #111827;
+}
+
+.dashboard-card--highlight .dashboard-card-value {
+  font-size: 2rem;
+  font-weight: 700;
 }
