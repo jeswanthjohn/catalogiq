@@ -32,14 +32,19 @@ function exportProductsCSV(products) {
   URL.revokeObjectURL(url);
 }
 
+/**
+   Indian currency formatter
+ */
+const formatCurrency = (value) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
-  /**
-   * IMPORTANT:
-   * - Revenue is calculated ONLY from stable business data (price × unitsSold)
-   * - It must NOT depend on filters, sorting, or pagination
-   */
   const stats = useMemo(() => {
     if (!hasData) {
       return {
@@ -107,7 +112,7 @@ function AdminDashboard({ products = [] }) {
         </DashboardCard>
 
         <DashboardCard title="Total Revenue">
-          <p>₹{stats.totalRevenue}</p>
+          <p>{formatCurrency(stats.totalRevenue)}</p>
         </DashboardCard>
 
         <DashboardCard title="Average Rating">
