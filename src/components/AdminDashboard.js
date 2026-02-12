@@ -98,6 +98,7 @@ function AdminDashboard({ products = [] }) {
       {/* ACTIONS */}
       <div style={{ marginBottom: "2rem" }}>
         <button
+          className="export-btn"
           onClick={() => exportProductsCSV(products)}
           aria-label="Export products as CSV"
         >
