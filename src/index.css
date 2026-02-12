@@ -81,3 +81,28 @@
   transform: translateY(0);
 }
 
+/* ===============================
+   ADMIN EMPTY STATE
+   =============================== */
+
+.admin-empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  color: #6b7280;
+}
+
+.admin-empty-state h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.admin-empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-style: italic;
+}

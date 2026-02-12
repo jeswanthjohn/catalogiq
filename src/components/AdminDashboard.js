@@ -78,10 +78,10 @@ function AdminDashboard({ products = [] }) {
 
   if (!hasData) {
     return (
-      <section>
-        <p style={{ color: "#666", marginTop: "1rem" }}>
-          No product data available. Analytics will appear once products are
-          added.
+      <section className="admin-empty-state">
+        <h4>No Analytics Data Available</h4>
+        <p>
+          Analytics will appear once product data is added to the catalog.
         </p>
       </section>
     );
