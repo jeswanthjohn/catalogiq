@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import ProductGrid from "./components/ProductGrid";
 import AdminDashboard from "./components/AdminDashboard";
+import ErrorBoundary from "./components/ErrorBoundary";
 import useProducts from "./hooks/useProducts";
 
 function App() {
@@ -30,6 +31,9 @@ function App() {
           sold: p.sold || Math.floor(Math.random() * 10),
         }));
         setProducts(enriched);
+      })
+      .catch((err) => {
+        console.error("Failed to load products:", err);
       });
   }, []);
 
@@ -86,26 +90,33 @@ function App() {
       </header>
 
       <main>
+        {/* ================= CATALOG SECTION ================= */}
         <section aria-labelledby="catalog-section">
           <h2 id="catalog-section" className="sr-only">
             Product listing
           </h2>
 
-          <ProductGrid
-            products={paginatedProducts}
-            allProducts={products}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            sortOrder={sortOrder}
-            onSortChange={setSortOrder}
-          />
+          <ErrorBoundary>
+            <ProductGrid
+              products={paginatedProducts}
+              allProducts={products}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              sortOrder={sortOrder}
+              onSortChange={setSortOrder}
+            />
+          </ErrorBoundary>
         </section>
 
         <hr />
 
+        {/* ================= ADMIN SECTION ================= */}
         <section aria-labelledby="admin-section" id="admin-section">
           <h2 id="admin-section-title">Admin Dashboard</h2>
-          <AdminDashboard products={products} />
+
+          <ErrorBoundary>
+            <AdminDashboard products={products} />
+          </ErrorBoundary>
         </section>
       </main>
     </>
