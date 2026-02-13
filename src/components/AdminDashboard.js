@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import DashboardCard from "./DashboardCard";
+import { calculateAnalytics } from "../utils/analytics";
 
 /**
  * Utility: Export products as CSV
@@ -16,7 +17,7 @@ function exportProductsCSV(products) {
       typeof p?.name === "string" ? p.name : "",
       typeof p?.price === "number" ? p.price : "",
       typeof p?.category === "string" ? p.category : "",
-      typeof p?.unitsSold === "number" ? p.unitsSold : 0,
+      Number(p?.unitsSold ?? p?.sold) || 0,
     ].join(",")
   );
 
@@ -33,7 +34,7 @@ function exportProductsCSV(products) {
 }
 
 /**
-   Indian currency formatter
+ * Indian currency formatter
  */
 const formatCurrency = (value) =>
   new Intl.NumberFormat("en-IN", {
@@ -45,36 +46,10 @@ const formatCurrency = (value) =>
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
+  // Memoized analytics computation (performance hardening)
   const stats = useMemo(() => {
-    if (!hasData) {
-      return {
-        totalProducts: 0,
-        totalRevenue: 0,
-        averageRating: 0,
-      };
-    }
-
-    const totalProducts = products.length;
-
-    const totalRevenue = products.reduce((sum, p) => {
-      const price = typeof p?.price === "number" ? p.price : 0;
-      const unitsSold =
-        typeof p?.unitsSold === "number" ? p.unitsSold : 0;
-
-      return sum + price * unitsSold;
-    }, 0);
-
-    const averageRating =
-      products.reduce((sum, p) => {
-        return sum + (typeof p?.rating === "number" ? p.rating : 0);
-      }, 0) / totalProducts;
-
-    return {
-      totalProducts,
-      totalRevenue,
-      averageRating: Number(averageRating.toFixed(2)),
-    };
-  }, [products, hasData]);
+    return calculateAnalytics(products);
+  }, [products]);
 
   if (!hasData) {
     return (
