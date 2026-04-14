@@ -63,6 +63,26 @@ function App() {
   });
 
   /* =========================
+     TOTAL PAGES 
+     ========================= */
+
+  const totalPages = useMemo(() => {
+    return Math.max(1, Math.ceil(derivedProducts.length / itemsPerPage));
+  }, [derivedProducts.length, itemsPerPage]);
+
+  /* =========================
+     CLAMP CURRENT PAGE 
+     ========================= */
+
+  useEffect(() => {
+    setCurrentPage((prev) => {
+      if (prev > totalPages) return totalPages;
+      if (prev < 1) return 1;
+      return prev;
+    });
+  }, [totalPages]);
+
+  /* =========================
      RESET PAGINATION ON FILTER CHANGE
      ========================= */
 
@@ -75,9 +95,10 @@ function App() {
      ========================= */
 
   const paginatedProducts = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
+    const safePage = Math.min(Math.max(currentPage, 1), totalPages);
+    const start = (safePage - 1) * itemsPerPage;
     return derivedProducts.slice(start, start + itemsPerPage);
-  }, [derivedProducts, currentPage, itemsPerPage]);
+  }, [derivedProducts, currentPage, itemsPerPage, totalPages]);
 
   /* =========================
      RENDER
@@ -87,6 +108,9 @@ function App() {
     <>
       <header>
         <h1>Product Catalog</h1>
+        <p style={{ fontSize: "0.9rem", opacity: 0.7 }}>
+          Page {currentPage} of {totalPages}
+        </p>
       </header>
 
       <main>
