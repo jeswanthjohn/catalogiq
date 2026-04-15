@@ -18,6 +18,22 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("");
 
+  // 🔍 SEARCH STATE (RAW + DEBOUNCED)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  /* =========================
+     DEBOUNCE LOGIC (CRITICAL)
+     ========================= */
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   /* =========================
      LOAD PRODUCTS (ONCE)
      ========================= */
@@ -60,10 +76,11 @@ function App() {
   const derivedProducts = useProducts(products, {
     category: selectedCategory,
     sortOrder,
+    search: debouncedSearch, // 🔥 IMPORTANT
   });
 
   /* =========================
-     TOTAL PAGES 
+     TOTAL PAGES
      ========================= */
 
   const totalPages = useMemo(() => {
@@ -71,7 +88,7 @@ function App() {
   }, [derivedProducts.length, itemsPerPage]);
 
   /* =========================
-     CLAMP CURRENT PAGE 
+     CLAMP CURRENT PAGE
      ========================= */
 
   useEffect(() => {
@@ -88,7 +105,7 @@ function App() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCategory, sortOrder]);
+  }, [selectedCategory, sortOrder, debouncedSearch]);
 
   /* =========================
      PAGINATION
@@ -114,7 +131,6 @@ function App() {
       </header>
 
       <main>
-        {/* ================= CATALOG SECTION ================= */}
         <section aria-labelledby="catalog-section">
           <h2 id="catalog-section" className="sr-only">
             Product listing
@@ -128,13 +144,14 @@ function App() {
               onCategoryChange={setSelectedCategory}
               sortOrder={sortOrder}
               onSortChange={setSortOrder}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
             />
           </ErrorBoundary>
         </section>
 
         <hr />
 
-        {/* ================= ADMIN SECTION ================= */}
         <section aria-labelledby="admin-section" id="admin-section">
           <h2 id="admin-section-title">Admin Dashboard</h2>
 

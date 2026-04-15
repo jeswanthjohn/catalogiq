@@ -4,6 +4,8 @@ export default function FilterBar({
   onCategoryChange,
   sortOrder,
   onSortChange,
+  searchQuery,
+  onSearchChange,
 }) {
   const categories = Array.from(
     new Set(products.map((p) => p.category))
@@ -11,6 +13,18 @@ export default function FilterBar({
 
   return (
     <div className="filter-bar" role="region" aria-label="Product filters">
+      {/* 🔍 SEARCH INPUT */}
+      <label>
+        Search:
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search products..."
+          aria-label="Search products by name"
+        />
+      </label>
+
       <label>
         Category:
         <select
