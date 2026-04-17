@@ -1,37 +1,7 @@
 import { useMemo } from "react";
 import DashboardCard from "./DashboardCard";
 import { calculateAnalytics } from "../utils/analytics";
-
-/**
- * Utility: Export products as CSV
- * Defensive against malformed product data.
- */
-function exportProductsCSV(products) {
-  if (!Array.isArray(products) || products.length === 0) return;
-
-  const headers = ["id", "name", "price", "category", "unitsSold"];
-
-  const rows = products.map((p) =>
-    [
-      p?.id ?? "",
-      typeof p?.name === "string" ? p.name : "",
-      typeof p?.price === "number" ? p.price : "",
-      typeof p?.category === "string" ? p.category : "",
-      Number(p?.unitsSold ?? p?.sold) || 0,
-    ].join(",")
-  );
-
-  const csvContent = [headers.join(","), ...rows].join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "products-report.csv";
-  link.click();
-
-  URL.revokeObjectURL(url);
-}
+import { exportProductsCSV } from "../utils/exportUtils";
 
 /**
  * Indian currency formatter
@@ -46,7 +16,7 @@ const formatCurrency = (value) =>
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
-  // Memoized analytics computation (performance hardening)
+  // Memoized analytics computation
   const stats = useMemo(() => {
     return calculateAnalytics(products);
   }, [products]);
