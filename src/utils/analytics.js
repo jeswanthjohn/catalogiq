@@ -1,8 +1,17 @@
 /**
+ * Utility: Safe number parser
+ * Ensures only valid finite numbers are used
+ */
+function toSafeNumber(value) {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+}
+
+/**
  * calculateAnalytics
  * ------------------
  * Aggregates business metrics from product dataset.
- * Designed to be pure and reusable.
+ * Hardened against malformed numeric inputs.
  */
 export function calculateAnalytics(products = []) {
   if (!Array.isArray(products) || products.length === 0) {
@@ -15,28 +24,41 @@ export function calculateAnalytics(products = []) {
 
   const totalProducts = products.length;
 
+  /* =========================
+     TOTAL REVENUE (SAFE)
+     ========================= */
   const totalRevenue = products.reduce((sum, p) => {
-    const price = Number(p?.price) || 0;
-
-    // Support both sold and unitsSold defensively
-    const units =
-      Number(p?.unitsSold ?? p?.sold) || 0;
+    const price = toSafeNumber(p?.price);
+    const units = toSafeNumber(p?.unitsSold ?? p?.sold);
 
     return sum + price * units;
   }, 0);
 
+  /* =========================
+     TOTAL RATINGS (SAFE)
+     ========================= */
   const totalRatings = products.reduce((sum, p) => {
-    return sum + (Number(p?.rating) || 0);
+    return sum + toSafeNumber(p?.rating);
   }, 0);
 
-  const averageRating =
-    totalProducts > 0
-      ? Number((totalRatings / totalProducts).toFixed(2))
+  /* =========================
+     AVERAGE RATING (SAFE)
+     ========================= */
+  let averageRating = 0;
+
+  if (totalProducts > 0) {
+    const avg = totalRatings / totalProducts;
+
+    averageRating = Number.isFinite(avg)
+      ? Number(avg.toFixed(2))
       : 0;
+  }
 
   return {
     totalProducts,
-    totalRevenue,
+    totalRevenue: Number.isFinite(totalRevenue)
+      ? totalRevenue
+      : 0,
     averageRating,
   };
 }

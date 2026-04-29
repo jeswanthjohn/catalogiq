@@ -4,19 +4,21 @@ import { calculateAnalytics } from "../utils/analytics";
 import { exportProductsCSV } from "../utils/exportUtils";
 
 /**
- * Indian currency formatter
+ * Indian currency formatter (safe)
  */
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("en-IN", {
+const formatCurrency = (value) => {
+  const safeValue = Number.isFinite(value) ? value : 0;
+
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(safeValue);
+};
 
 function AdminDashboard({ products = [] }) {
   const hasData = Array.isArray(products) && products.length > 0;
 
-  // Memoized analytics computation
   const stats = useMemo(() => {
     return calculateAnalytics(products);
   }, [products]);
@@ -62,7 +64,11 @@ function AdminDashboard({ products = [] }) {
         </DashboardCard>
 
         <DashboardCard title="Average Rating">
-          <p>{stats.averageRating}</p>
+          <p>
+            {Number.isFinite(stats.averageRating)
+              ? stats.averageRating
+              : 0}
+          </p>
         </DashboardCard>
       </section>
     </section>
