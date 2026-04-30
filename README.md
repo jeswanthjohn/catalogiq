@@ -96,8 +96,30 @@ This prevents unnecessary recalculation during re‑renders and ensures efficien
 The application includes a React `ErrorBoundary` that isolates rendering failures.
 
 If a component fails, the rest of the application remains functional. This mirrors production‑grade frontend resilience patterns.
-
 ---
+
+### Key Engineering Decisions
+
+- **Single Source of Truth**
+  - All UI and analytics derive from the same product dataset
+  - Eliminates synchronization bugs between views
+
+- **Derived State over Stored State**
+  - Filtering, sorting, and pagination are computed, not stored
+  - Prevents stale data and improves predictability
+
+- **Separation of Concerns**
+  - UI (components), logic (hooks), and computation (utils) are isolated
+  - Enables easier testing and scalability
+
+- **Defensive Programming**
+  - All external and dynamic inputs are sanitized
+  - Prevents runtime crashes and inconsistent UI behavior
+
+- **Performance-Aware Rendering**
+  - Memoization and debouncing are used selectively
+  - Avoids unnecessary recalculations without premature optimization
+  ---
 
 ### Testing Strategy
 
@@ -125,6 +147,46 @@ npm test
 ```
 ---
 
+### Edge Case Handling
+
+The system is designed to handle real-world edge cases:
+
+- Empty datasets and missing product fields
+- Invalid numeric inputs (NaN, undefined, non-numeric values)
+- Broken or missing image URLs
+- Rapid user input during search
+- Filtering combinations resulting in zero results
+- Exported CSV data containing potentially unsafe values
+
+These scenarios are explicitly handled to ensure consistent UI behavior and data integrity.
+---
+
+### Production Hardening
+
+The application includes several production-grade safeguards to ensure stability, security, and correctness under real-world conditions:
+
+- **Pagination Safety**
+  - Prevents invalid page states when dataset size changes
+  - Automatically clamps page within valid bounds
+
+- **Debounced Search Optimization**
+  - Reduces unnecessary recomputation during rapid user input
+  - Ensures performant filtering for large datasets
+
+- **CSV Injection Protection**
+  - Sanitizes exported values to prevent formula execution in spreadsheet tools
+  - Mitigates security risks in data export workflows
+
+- **Image Fallback Handling**
+  - Gracefully handles broken or missing product images
+  - Maintains UI stability without layout shifts
+
+- **Numeric Sanitization in Analytics**
+  - Prevents NaN and invalid values from propagating into business metrics
+  - Ensures reliable revenue and rating calculations
+
+  ---
+  
 ## Project Structure
 
 ```src/
