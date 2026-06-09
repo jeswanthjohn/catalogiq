@@ -91,11 +91,38 @@ This prevents unnecessary recalculation during re‑renders and ensures efficien
 
 ---
 
+### Scalability Considerations
+
+The application was structured to remain maintainable as dataset size grows:
+
+- Centralized product derivation logic via custom hooks
+- Memoized analytics and filtering computations
+- Debounced search to reduce unnecessary recalculations
+- Reusable utility functions for business metric computation
+
+These patterns reduce coupling and help support future migration to API-driven data sources.
+
+---
+
 ### Runtime Resilience
 
 The application includes a React `ErrorBoundary` that isolates rendering failures.
 
 If a component fails, the rest of the application remains functional. This mirrors production‑grade frontend resilience patterns.
+---
+
+
+### Accessibility
+
+The application follows accessibility-focused frontend practices:
+
+- Semantic HTML structure throughout the catalog and dashboard
+- ARIA labels for interactive controls
+- Keyboard-friendly navigation patterns
+- Meaningful empty and error state messaging
+
+These improvements help ensure usability across a wider range of users and assistive technologies.
+
 ---
 
 ### Key Engineering Decisions
@@ -185,6 +212,19 @@ The application includes several production-grade safeguards to ensure stability
   - Prevents NaN and invalid values from propagating into business metrics
   - Ensures reliable revenue and rating calculations
 
+  ---
+
+### Security Considerations
+
+Several defensive measures were implemented to improve application safety:
+
+- CSV export values are sanitized to prevent spreadsheet formula injection
+- Numeric inputs are validated before analytics computation
+- Runtime validation guards against malformed product data
+- Export logic is isolated from UI rendering concerns
+
+While this project uses static data, these practices mirror safeguards commonly used in production applications.
+  
   ---
   
 ## Project Structure
